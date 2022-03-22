@@ -55,7 +55,14 @@ namespace etrace
     {
         public void TakeEvent(TraceEvent e)
         {
-            TakeEvent(e, e.AsRawString());
+            string tmp = e.AsRawString();
+            tmp += "\n UnixTimeNanoseconds = ";
+            // tmp += ((DateTimeOffset)(e.TimeStamp.ToUniversalTime())).ToUnixTimeMilliseconds();
+
+            TimeSpan d2 = e.TimeStamp.ToUniversalTime()-new DateTime(1970, 1, 1);
+            long unix_epoch_nanosecs = d2.Ticks * 100;
+            tmp += unix_epoch_nanosecs;
+            TakeEvent(e, tmp);
         }
 
         public void TakeEvent(TraceEvent e, string description)
